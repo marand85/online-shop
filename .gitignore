@@ -42,3 +42,9 @@ frontend/dist/
 .env
 .env.*
 docker-compose.override.yml
+
+### Editor / OS junk ###
+*~
+*.swp
+*.swo
+*.un~
