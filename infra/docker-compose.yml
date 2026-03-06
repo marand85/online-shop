@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: online-shop-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: online_shop
+      POSTGRES_USER: shop_user
+      POSTGRES_PASSWORD: shop_secret
+      TZ: UTC
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shop_user -d online_shop"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
