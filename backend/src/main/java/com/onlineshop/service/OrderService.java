@@ -2,9 +2,11 @@ package com.onlineshop.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.onlineshop.dto.order.OrderCreateRequest;
 import com.onlineshop.dto.order.OrderResponse;
@@ -20,7 +22,6 @@ import com.onlineshop.repository.OrderRepository;
 import com.onlineshop.repository.ProductRepository;
 import com.onlineshop.util.OrderNumberGenerator;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -100,6 +101,12 @@ public class OrderService {
                 savedOrder.getPlacedAt()));
 
         return orderMapper.toResponse(savedOrder);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<OrderResponse> getOrderByOrderNumber(String orderNumber) {
+        return orderRepository.findByOrderNumberWithItems(orderNumber)
+                .map(orderMapper::toResponse);
     }
 
 }
