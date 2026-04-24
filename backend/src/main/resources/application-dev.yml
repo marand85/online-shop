@@ -13,3 +13,8 @@ spring:
 logging:
   level:
     com.onlineshop: DEBUG
+
+app:
+  cors:
+    allowed-origin: http://localhost:3000
+    

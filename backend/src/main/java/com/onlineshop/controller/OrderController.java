@@ -13,9 +13,12 @@ import com.onlineshop.dto.order.OrderCreateRequest;
 import com.onlineshop.dto.order.OrderResponse;
 import com.onlineshop.service.OrderService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "Orders", description = "Order management endpoints")
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @Operation(summary = "Create new order", description = "Creates a new guest order with shipping details")
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(
             @Valid @RequestBody OrderCreateRequest request) {
@@ -31,6 +35,7 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(summary = "Get order by order number", description = "Returns order details by its public order number")
     @GetMapping("/{orderNumber}")
     public ResponseEntity<OrderResponse> getOrder(@PathVariable String orderNumber) {
         return orderService.getOrderByOrderNumber(orderNumber)
