@@ -14,6 +14,8 @@ import com.onlineshop.dto.order.OrderResponse;
 import com.onlineshop.service.OrderService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,12 @@ public class OrderController {
     private final OrderService orderService;
 
     @Operation(summary = "Create new order", description = "Creates a new guest order with shipping details")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Order created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "409", description = "Insufficient stock"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(
             @Valid @RequestBody OrderCreateRequest request) {
@@ -36,6 +44,11 @@ public class OrderController {
     }
 
     @Operation(summary = "Get order by order number", description = "Returns order details by its public order number")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Order found"),
+            @ApiResponse(responseCode = "404", description = "Order not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping("/{orderNumber}")
     public ResponseEntity<OrderResponse> getOrder(@PathVariable String orderNumber) {
         return orderService.getOrderByOrderNumber(orderNumber)

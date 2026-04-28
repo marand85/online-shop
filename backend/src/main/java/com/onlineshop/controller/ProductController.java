@@ -15,6 +15,8 @@ import com.onlineshop.service.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +29,11 @@ public class ProductController {
     private final ProductService productService;
 
     @Operation(summary = "Get products", description = "Returns paginated list of products. Supports filtering by category and text search.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved products"),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping
     public ResponseEntity<ProductListResponse> getAllProducts(
             @PageableDefault(size = 20, sort = "createdAt") Pageable pageable,
@@ -45,6 +52,11 @@ public class ProductController {
     }
 
     @Operation(summary = "Get product by ID", description = "Returns detailed information about single product")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Product found"),
+            @ApiResponse(responseCode = "404", description = "Product not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(
             @Parameter(description = "ID of the product to retrieve") @PathVariable Long id) {

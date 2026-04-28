@@ -11,6 +11,8 @@ import com.onlineshop.dto.category.CategoryResponse;
 import com.onlineshop.service.CategoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -23,9 +25,12 @@ public class CategoryController {
 	private final CategoryService categoryService;
 
 	@Operation(summary = "Get all categories", description = "Returns list of all available categories in the system")
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Successfully retrieved categories"),
+			@ApiResponse(responseCode = "500", description = "Internal server error")
+	})
 	@GetMapping
 	public ResponseEntity<List<CategoryResponse>> getAllCategories() {
 		return ResponseEntity.ok(categoryService.getAllCategories());
 	}
-
 }
