@@ -103,6 +103,12 @@
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <!-- Spring Boot Actuator -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -142,9 +148,9 @@
                             <version>${mapstruct.version}</version>
                         </path>
                     </annotationProcessorPaths>
-                    <compilerArgs>
+                    <!-- <compilerArgs>
                         <arg>-Amapstruct.defaultComponentModel=spring</arg>
-                    </compilerArgs>
+                    </compilerArgs> -->
                 </configuration>
             </plugin>
         </plugins>

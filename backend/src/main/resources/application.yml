@@ -18,11 +18,28 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: false
     
-  springdoc:
-    swagger-ui:
-      path: /swagger-ui.html
-      operations-sorter: method
-      tags-sorter: alpha
-      doc-expansion: none
-    api-docs:
-      path: /v3/api-docs
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    doc-expansion: none
+  api-docs:
+    path: /v3/api-docs
+
+# ==================== Actuator ====================
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health, info, metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+    info:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
+        

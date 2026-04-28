@@ -1,20 +1,29 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/online_shop
-    username: shop_user
-    password: shop_secret
+    username: ${DB_USERNAME:shop_user}
+    password: ${DB_PASSWORD:shop_secret}
 
   jpa:
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+  
+  flyway:
+    enabled: true
 
 logging:
   level:
     com.onlineshop: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 app:
   cors:
     allowed-origin: http://localhost:3000
-    
+
+management:
+  endpoint:
+    health:
+      show-details: always
