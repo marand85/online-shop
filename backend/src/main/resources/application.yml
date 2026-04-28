@@ -42,4 +42,9 @@ management:
   info:
     env:
       enabled: true
+    build:
+      enabled: true
+    java:
+      enabled: true
+      
         
