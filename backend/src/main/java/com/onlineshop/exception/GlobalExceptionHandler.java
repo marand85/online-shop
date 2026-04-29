@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidStatusTransitionException.class)
-    public ProblemDetail handleInvlaidStatusTransition(InvalidStatusTransitionException ex) {
+    public ProblemDetail handleInvalidStatusTransition(InvalidStatusTransitionException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
         problem.setTitle("Invalid Status Transition");
         problem.setProperty("timestamp", Instant.now());
