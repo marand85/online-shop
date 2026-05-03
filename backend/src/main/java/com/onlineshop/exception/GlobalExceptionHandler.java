@@ -29,10 +29,10 @@ public class GlobalExceptionHandler {
         return problem;
     }
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ProblemDetail handleIllegalState(IllegalStateException ex) {
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        problem.setTitle("Invalid State");
+    @ExceptionHandler(ProductUnavailableException.class)
+    public ProblemDetail handleProductUnavailable(ProductUnavailableException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problem.setTitle("Product Unavailable");
         problem.setProperty("timestamp", Instant.now());
         return problem;
     }
