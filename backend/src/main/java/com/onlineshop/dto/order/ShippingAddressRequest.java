@@ -1,22 +1,23 @@
 package com.onlineshop.dto.order;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record ShippingAddressRequest(
-        @NotBlank @Size(max = 200) String name,
+                @NotBlank @Size(max = 200) String name,
 
-        @NotBlank @Size(max = 200) String line1,
+                @NotBlank @Size(max = 200) String line1,
 
-        @Size(max = 200) String line2,
+                @Size(max = 200) String line2,
 
-        @NotBlank @Size(max = 120) String city,
+                @NotBlank @Size(max = 120) String city,
 
-        @Size(max = 120) String state,
+                @Size(max = 120) String state,
 
-        @NotBlank @Size(max = 32) String postal,
+                @NotBlank @Size(max = 32) String postal,
 
-        @NotBlank @Size(min = 2, max = 2) String country
+                @NotBlank @Pattern(regexp = "^[A-Z]{2}$", message = "country must be a 2-letter uppercase ISO code") String country
 
 ) {
 }
