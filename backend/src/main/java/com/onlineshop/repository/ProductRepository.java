@@ -22,7 +22,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByCategorySlug(@Param("categorySlug") String categorySlug, Pageable pageable);
 
     @EntityGraph(attributePaths = { "category" })
-    @Query("SELECT p FROM Product p WHERE p.active = true AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :q, '%')))")
+    @Query("""
+                SELECT p FROM Product p
+                WHERE p.active = true
+                AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :q, '%'))
+                  OR LOWER(p.description) LIKE LOWER(CONCAT('%', :q, '%')))
+            """)
     Page<Product> search(@Param("q") String query, Pageable pageable);
 
     @EntityGraph(attributePaths = { "category" })
@@ -30,4 +35,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findActiveById(@Param("id") Long id);
 
     boolean existsBySku(String sku);
+
+    @EntityGraph(attributePaths = { "category" })
+    @Query("""
+            SELECT p FROM Product p
+            WHERE p.active = true
+            AND p.category.slug = :categorySlug
+            AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :q, '%'))
+                OR LOWER(p.description) LIKE LOWER(CONCAT('%', :q, '%')))
+            """)
+    Page<Product> searchByCategorySlug(
+            @Param("categorySlug") String categorySlug,
+            @Param("q") String query,
+            Pageable pageable);
 }
