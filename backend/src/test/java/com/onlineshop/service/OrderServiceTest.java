@@ -27,6 +27,7 @@ import com.onlineshop.entity.Product;
 import com.onlineshop.enums.OrderStatus;
 import com.onlineshop.event.OrderPlacedEvent;
 import com.onlineshop.exception.InsufficientStockException;
+import com.onlineshop.exception.ProductUnavailableException;
 import com.onlineshop.exception.ResourceNotFoundException;
 import com.onlineshop.mapper.OrderMapper;
 import com.onlineshop.repository.OrderRepository;
@@ -100,7 +101,7 @@ public class OrderServiceTest {
                                 .build();
 
                 orderResponse = new OrderResponse(
-                                "ORD-TEST123", "NEW", 20000, "PLN", Instant.now(),
+                                "ORD-TEST123", OrderStatus.NEW, 20000, "PLN", Instant.now(),
                                 List.of(), "Jan Kowalski", "ul. Testowa 1", null,
                                 "Warszawa", null, "00-001", "PL");
 
@@ -171,7 +172,7 @@ public class OrderServiceTest {
                 when(productRepository.findById(1L)).thenReturn(Optional.of(inactiveProduct));
 
                 assertThatThrownBy(() -> orderService.createOrder(validRequest))
-                                .isInstanceOf(IllegalStateException.class)
+                                .isInstanceOf(ProductUnavailableException.class)
                                 .hasMessageContaining("is not active");
         }
 }

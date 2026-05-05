@@ -11,6 +11,5 @@ INSERT INTO categories (id, name, slug) VALUES
     (6, 'Home & Kitchen',    'home-kitchen'),
     (7, 'Apparel',           'apparel'),
     (8, 'Toys & Games',      'toys-games')
-ON CONFLICT (id) DO UPDATE SET
-    name = EXCLUDED.name,
-    slug = EXCLUDED.slug;
+ON CONFLICT (slug) DO UPDATE SET
+    name = EXCLUDED.name;

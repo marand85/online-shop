@@ -1,8 +1,6 @@
 spring:
   application:
     name: online-shop
-  profiles:
-    active: dev
   
   jpa:
     open-in-view: false

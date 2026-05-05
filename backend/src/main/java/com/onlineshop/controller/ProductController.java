@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.onlineshop.dto.product.ProductListResponse;
 import com.onlineshop.dto.product.ProductResponse;
+import com.onlineshop.exception.ResourceNotFoundException;
 import com.onlineshop.service.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,6 +63,6 @@ public class ProductController {
             @Parameter(description = "ID of the product to retrieve") @PathVariable Long id) {
         return productService.getProductById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id " + id + " not found"));
     }
 }
