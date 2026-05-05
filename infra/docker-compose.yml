@@ -17,5 +17,30 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    build:
+      context: ../backend
+    container_name: online-shop-backend
+    depends_on:
+      postgres:
+        condition:  service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/online_shop
+      SPRING_DATASOURCE_USERNAME: shop_user
+      SPRING_DATASOURCE_PASSWORD: shop_secret
+      FRONTEND_ORIGIN: http://localhost:3000
+    ports:
+      - "8080:8080"
+  
+  frontend:
+    build:
+      context: ../frontend
+    container_name: online-shop-frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
 volumes:
   postgres_data:
