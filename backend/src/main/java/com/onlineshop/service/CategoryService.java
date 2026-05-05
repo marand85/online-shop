@@ -2,6 +2,7 @@ package com.onlineshop.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,7 @@ public class CategoryService {
     private final CategoryMapper categoryMapper;
 
     public List<CategoryResponse> getAllCategories() {
-        return categoryRepository.findAll()
+        return categoryRepository.findAll(Sort.by("name").ascending())
                 .stream()
                 .map(categoryMapper::toResponse)
                 .toList();
