@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { fetchCategories, fetchProducts } from "./api/shopApi";
 
+function formatPrice(priceCents, currency) {
+  const value = (priceCents ?? 0) / 100;
+  return new Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: currency || "PLN",
+  }).format(value);
+}
+
 function App() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -90,7 +98,7 @@ function App() {
         <ul>
           {products.map((product) => (
           <li key={product.id}>
-            {product.name} - {product.priceCents} {product.currency}
+            {product.name} - {formatPrice(product.priceCents, product.currency)}
           </li>
         ))}
         </ul>
