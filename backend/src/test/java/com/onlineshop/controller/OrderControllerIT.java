@@ -84,4 +84,32 @@ class OrderControllerIT extends BaseIntegrationTest {
         .andExpect(jsonPath("$.errors.contactEmail").exists());
 
   }
+
+  @Test
+  @DisplayName("Should return 400 when currency or country format is invalid")
+  void shouldReturn400WhenCurrencyOrCountryFormatIsInvalid() throws Exception {
+    String invalidJson = """
+        {
+          "items": [{"productId": 5, "quantity": 1}],
+          "shipping": {
+            "name": "Jan Kowalski",
+            "line1": "ul. Testowa 1",
+            "city": "Warszawa",
+            "postal": "00-001",
+            "country": "pl"
+          },
+          "contactEmail": "jan.kowalski@test.pl",
+          "contactPhone": "123456789",
+          "currency": "pln"
+        }
+        """;
+
+    mockMvc.perform(post("/api/orders")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(invalidJson))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.title").value("Validation Failed"))
+        .andExpect(jsonPath("$.errors.currency").value("currency must be a 3-letter uppercase ISO code"))
+        .andExpect(jsonPath("$.errors['shipping.country']").value("country must be a 2-letter uppercase ISO code"));
+  }
 }
