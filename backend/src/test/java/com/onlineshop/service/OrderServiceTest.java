@@ -101,7 +101,7 @@ public class OrderServiceTest {
                                 .build();
 
                 orderResponse = new OrderResponse(
-                                "ORD-TEST123", "NEW", 20000, "PLN", Instant.now(),
+                                "ORD-TEST123", OrderStatus.NEW, 20000, "PLN", Instant.now(),
                                 List.of(), "Jan Kowalski", "ul. Testowa 1", null,
                                 "Warszawa", null, "00-001", "PL");
 
