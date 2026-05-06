@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { fetchCategories, fetchProducts } from "./api/shopApi";
+import { 
+  fetchCategories,
+  fetchProducts,
+  fetchOrderByNumber } from "./api/shopApi";
 
 function formatPrice(priceCents, currency) {
   const value = (priceCents ?? 0) / 100;
@@ -18,6 +21,11 @@ function App() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [orderNumberInput, setOrderNumberInput] = useState("");
+  const [orderLookupResult, setOrderLookupResult] = useState(null);
+  const [orderLookupError, setOrderLookupError] = useState("");
+  const [orderLookupLoading, setOrderLookupLoading] = useState(false);
 
   useEffect(() => {
     async function loadCategories() {
@@ -64,6 +72,38 @@ function App() {
     loadProducts();
   }, [searchQuery, selectedCategory]);
 
+  async function handleOrderLookup(event) {
+    event.preventDefault();
+
+    const normalizedOrderNumber = orderNumberInput
+      .toUpperCase()
+      .replace(/[^A-Z0-9-]/g, "")
+      .trim();
+
+    if (!normalizedOrderNumber) {
+      setOrderLookupResult(null);
+      setOrderLookupError("Order number is required.");
+      return;
+    }
+
+    try {
+      setOrderLookupLoading(true);
+      setOrderLookupResult(null);
+      setOrderLookupError("");
+
+      const order = await fetchOrderByNumber(normalizedOrderNumber);
+      setOrderLookupResult(order);
+    } catch(err) {      
+      if (err?.response?.status === 404) {
+        setOrderLookupError("Order not found.");
+      } else {
+        setOrderLookupError("Failed to fetch order.")
+      }
+    } finally {
+      setOrderLookupLoading(false);
+    }
+  }
+
   return (
     <main style={{ padding: "24px", maxWidth: "960px", margin: "0 auto"}}>
       <h1>Online Shop</h1>
@@ -89,6 +129,39 @@ function App() {
             </option>
           ))}
         </select>
+      </section>
+
+      <section style = {{ marginBottom: "24px" }}>
+        <h2>Order lookup</h2>
+        <form onSubmit={handleOrderLookup} style={{ display: "flex", gap: "12px" }}>
+          <input
+            type="text"
+            placeholder="Enter order number..."
+            value={orderNumberInput}
+            onChange={(event) => setOrderNumberInput(event.target.value)}
+            style={{ flex: 1, padding: "8px" }}
+          />
+          <button type="submit" disabled={orderLookupLoading} style={{ padding: "8px 16px"}}>
+            {orderLookupLoading ? "Checking..." : "Check order"}
+          </button>
+        </form>
+
+        {orderLookupError && <p style={{ marginTop: "8px" }}>{orderLookupError}</p>}
+
+        {orderLookupResult && (
+          <div style={{ marginTop: "12px" }}>
+            <p>
+              <strong>Order number:</strong> {orderLookupResult.orderNumber}
+            </p>
+            <p>
+              <strong>Status:</strong> {orderLookupResult.status}
+            </p>
+            <p>
+              <strong>Total:</strong>{" "}
+              {formatPrice(orderLookupResult.totalCents, orderLookupResult.currency)}
+            </p>
+          </div>
+        )}
       </section>
 
       {loading && <p>Loading products...</p>}
