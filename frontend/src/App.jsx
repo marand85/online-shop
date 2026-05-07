@@ -39,7 +39,7 @@ function App() {
     async function loadCategories() {
       try {
         const data = await fetchCategories();
-        setCategories(data ?? []);
+        setCategories(Array.isArray(data) ? data : []);
       } catch (err) {
         setError("Failed to load categories.");
       }
@@ -164,137 +164,144 @@ function App() {
   }
 
   return (
-    <main style={{ padding: "24px", maxWidth: "960px", margin: "0 auto" }}>
-      <h1>Online Shop</h1>
+    <main className="min-h-screen bg-white text-black">
+      <div className="mx-auto max-w-5xl px-4 py-8">
+        <h1 className="mb-6 text-3xl font-bold tracking-tight">Online Shop</h1>
 
-      <section style={{ display: "flex", gap: "12px", marginBottom: "16px" }}>
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.value)}
-          style={{ flex: 1, padding: "8px" }}
-        />
-
-        <select
-          value={selectedCategory}
-          onChange={(event) => setSelectedCategory(event.target.value)}
-          style={{ padding: "8px" }}
-        >
-          <option value="">All categories</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.slug}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-      </section>
-
-      <section style={{ marginBottom: "24px" }}>
-        <h2>Place quick order</h2>
-
-        <form
-          onSubmit={handleQuickOrderSubmit}
-          style={{ display: "grid", gap: "12px", maxWidth: "560px" }}
-        >
-          <select
-            value={selectedProductId}
-            onChange={(event) => setSelectedProductId(event.target.value)}
-            style={{ padding: "8px" }}
-            disabled={products.length === 0 || orderCreateLoading}
-          >
-            {products.length === 0 ? (
-              <option value="">No products available</option>
-            ) : (
-              products.map((product) => (
-                <option key={product.id} value={String(product.id)}>
-                  {product.name} - {formatPrice(product.priceCents, product.currency)}
-                </option>
-              ))
-            )}
-          </select>
-
-          <input
-            type="email"
-            placeholder="Contact email"
-            value={quickOrderEmail}
-            onChange={(event) => setQuickOrderEmail(event.target.value)}
-            style={{ padding: "8px" }}
-            disabled={orderCreateLoading}
-          />
-
-          <button
-            type="submit"
-            disabled={orderCreateLoading || products.length === 0}
-            style={{ padding: "8px 16px", width: "fit-content" }}
-          >
-            {orderCreateLoading ? "Placing order..." : "Place order"}
-          </button>
-        </form>
-
-        {orderCreateError && <p style={{ marginTop: "8px"}}>{orderCreateError}</p>}
-
-        {orderCreateResult && (
-          <div style={{ marginTop: "12px" }}>
-            <p>
-              <strong>Order created:</strong> {orderCreateResult.orderNumber}
-            </p>
-            <p>
-              <strong>Status:</strong> {orderCreateResult.status}
-            </p>
-            <p>
-              <strong>Total:</strong>{" "}
-              {formatPrice(orderCreateResult.totalCents, orderCreateResult.currency)}
-            </p>
-          </div>
-        )}
-      </section>
-
-      <section style = {{ marginBottom: "24px" }}>
-        <h2>Order lookup</h2>
-        <form onSubmit={handleOrderLookup} style={{ display: "flex", gap: "12px" }}>
+        <section className="mb-6 grid gap-3 md:grid-cols-[1fr_260px]">
           <input
             type="text"
-            placeholder="Enter order number..."
-            value={orderNumberInput}
-            onChange={(event) => setOrderNumberInput(event.target.value)}
-            style={{ flex: 1, padding: "8px" }}
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none ring-0 transition focus:border-gray-500"
           />
-          <button type="submit" disabled={orderLookupLoading} style={{ padding: "8px 16px" }}>
-            {orderLookupLoading ? "Checking..." : "Check order"}
-          </button>
-        </form>
 
-        {orderLookupError && <p style={{ marginTop: "8px" }}>{orderLookupError}</p>}
+          <select
+            value={selectedCategory}
+            onChange={(event) => setSelectedCategory(event.target.value)}
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 outline-none transition focus:border-gray-500"
+          >
+            <option value="">All categories</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.slug}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </section>
 
-        {orderLookupResult && (
-          <div style={{ marginTop: "12px" }}>
-            <p>
-              <strong>Order number:</strong> {orderLookupResult.orderNumber}
-            </p>
-            <p>
-              <strong>Status:</strong> {orderLookupResult.status}
-            </p>
-            <p>
-              <strong>Total:</strong>{" "}
-              {formatPrice(orderLookupResult.totalCents, orderLookupResult.currency)}
-            </p>
-          </div>
+        <section className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
+          <h2 className="mb-3 text-xl font-semibold">Place quick order</h2>
+
+          <form onSubmit={handleQuickOrderSubmit} className="grid max-w-xl gap-3">
+            <select
+              value={selectedProductId}
+              onChange={(event) => setSelectedProductId(event.target.value)}
+              disabled={products.length === 0 || orderCreateLoading}
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 outline-none transition focus:border-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
+            >
+              {products.length === 0 ? (
+                <option value="">No products available</option>
+              ) : (
+                products.map((product) => (
+                  <option key={product.id} value={String(product.id)}>
+                    {product.name} - {formatPrice(product.priceCents, product.currency)}
+                  </option>
+                ))
+              )}
+            </select>
+
+            <input
+              type="email"
+              placeholder="Contact email"
+              value={quickOrderEmail}
+              onChange={(event) => setQuickOrderEmail(event.target.value)}
+              disabled={orderCreateLoading}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none transition focus:border-gray-500 disabled:cursor-not-allowed disabled:bg-gray-100"
+            />
+
+            <button
+              type="submit"
+              disabled={orderCreateLoading || products.length === 0}
+              className="w-fit rounded-md bg-black px-4 py-2 text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400"
+            >
+              {orderCreateLoading ? "Placing order..." : "Place order"}
+            </button>
+          </form>
+
+          {orderCreateError && <p className="mt-2 text-sm text-red-600">{orderCreateError}</p>}
+
+          {orderCreateResult && (
+            <div className="mt-3 rounded-md border border-gray-200 bg-white p-3 text-sm">
+              <p>
+                <strong>Order created:</strong> {orderCreateResult.orderNumber}
+              </p>
+              <p>
+                <strong>Status:</strong> {orderCreateResult.status}
+              </p>
+              <p>
+                <strong>Total:</strong>{" "}
+                {formatPrice(orderCreateResult.totalCents, orderCreateResult.currency)}
+              </p>
+            </div>
+          )}
+        </section>
+
+        <section className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
+          <h2 className="mb-3 text-xl font-semibold">Order lookup</h2>
+
+          <form onSubmit={handleOrderLookup} className="flex flex-col gap-3 md:flex-row">
+            <input
+              type="text"
+              placeholder="Enter order number..."
+              value={orderNumberInput}
+              onChange={(event) => setOrderNumberInput(event.target.value)}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none transition focus:border-gray-500"
+            />
+            <button
+              type="submit"
+              disabled={orderLookupLoading}
+              className="w-fit rounded-md bg-black px-4 py-2 text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400"
+            >
+              {orderLookupLoading ? "Checking..." : "Check order"}
+            </button>
+          </form>
+
+          {orderLookupError && <p className="mt-2 text-sm text-red-600">{orderLookupError}</p>}
+
+          {orderLookupResult && (
+            <div className="mt-3 rounded-md border border-gray-200 bg-white p-3 text-sm">
+              <p>
+                <strong>Order number:</strong> {orderLookupResult.orderNumber}
+              </p>
+              <p>
+                <strong>Status:</strong> {orderLookupResult.status}
+              </p>
+              <p>
+                <strong>Total:</strong>{" "}
+                {formatPrice(orderLookupResult.totalCents, orderLookupResult.currency)}
+              </p>
+            </div>
+          )}
+        </section>
+
+        {loading && <p className="text-sm text-gray-600">Loading products...</p>}
+        {error && <p className="text-sm text-red-600">{error}</p>}
+
+        {!loading && !error && (
+          <section className="rounded-lg border border-gray-200 bg-white p-4">
+            <h2 className="mb-3 text-xl font-semibold">Products</h2>
+            <ul className="space-y-2">
+              {products.map((product) => (
+                <li key={product.id} className="rounded-md border border-gray-200 px-3 py-2">
+                  {product.name} - {formatPrice(product.priceCents, product.currency)}
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
-      </section>
-
-      {loading && <p>Loading products...</p>}
-      {error && <p>{error}</p>}
-
-      {!loading && !error && (
-        <ul>
-          {products.map((product) => (
-          <li key={product.id}>
-            {product.name} - {formatPrice(product.priceCents, product.currency)}
-          </li>
-        ))}
-        </ul>
-      )}
+      </div>
     </main>
   );
 }
