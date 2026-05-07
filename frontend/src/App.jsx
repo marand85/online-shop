@@ -39,7 +39,7 @@ function App() {
     async function loadCategories() {
       try {
         const data = await fetchCategories();
-        setCategories(data ?? []);
+        setCategories(Array.isArray(data) ? data : []);
       } catch (err) {
         setError("Failed to load categories.");
       }
@@ -164,7 +164,7 @@ function App() {
   }
 
   return (
-    <main style={{ padding: "24px", maxWidth: "960px", margin: "0 auto" }}>
+    <main className="min-h-screen bg-white text-black">
       <h1>Online Shop</h1>
 
       <section style={{ display: "flex", gap: "12px", marginBottom: "16px" }}>
