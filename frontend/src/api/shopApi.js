@@ -14,3 +14,8 @@ export async function fetchOrderByNumber(orderNumber) {
     const response = await apiClient.get(`/orders/${orderNumber}`);
     return response.data;
 }
+
+export async function createOrder(payload) {
+    const response = await apiClient.post("/orders", payload);
+    return response.data;
+}
