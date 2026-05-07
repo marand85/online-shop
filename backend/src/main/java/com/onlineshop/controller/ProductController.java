@@ -41,15 +41,7 @@ public class ProductController {
             @Parameter(description = "Filter products by category slug") @RequestParam(required = false) String categorySlug,
             @Parameter(description = "Search term in product name or description") @RequestParam(required = false) String q) {
 
-        if (q != null && !q.isBlank()) {
-            return ResponseEntity.ok(productService.searchProducts(q.trim(), pageable));
-        }
-
-        if (categorySlug != null && !categorySlug.isBlank()) {
-            return ResponseEntity.ok(productService.getProductsByCategory(categorySlug.trim(), pageable));
-        }
-
-        return ResponseEntity.ok(productService.getAllProducts(pageable));
+        return ResponseEntity.ok(productService.getProducts(categorySlug, q, pageable));
     }
 
     @Operation(summary = "Get product by ID", description = "Returns detailed information about single product")

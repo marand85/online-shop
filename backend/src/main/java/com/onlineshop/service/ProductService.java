@@ -37,4 +37,24 @@ public class ProductService {
         return productRepository.findActiveById(id).map(productMapper::toResponse);
     }
 
+    public ProductListResponse getProducts(String categorySlug, String query, Pageable pageable) {
+        boolean hasCategory = categorySlug != null && !categorySlug.isBlank();
+        boolean hasQuery = query != null && !query.isBlank();
+
+        if (hasCategory && hasQuery) {
+            return productMapper.toListResponse(
+                    productRepository.searchByCategorySlug(categorySlug.trim(), query.trim(), pageable));
+        }
+
+        if (hasQuery) {
+            return productMapper.toListResponse(productRepository.search(query.trim(), pageable));
+        }
+
+        if (hasCategory) {
+            return productMapper.toListResponse(productRepository.findByCategorySlug(categorySlug, pageable));
+        }
+
+        return productMapper.toListResponse(productRepository.findAllActive(pageable));
+    }
+
 }
