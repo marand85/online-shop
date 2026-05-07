@@ -38,4 +38,13 @@ public class ProductControllerIT extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.content[0].sku").value("BACKPACK-TECH"))
                 .andExpect(jsonPath("$.content[0].categorySlug").value("accessories"));
     }
+
+    @Test
+    @DisplayName("Should return 404 problem detail for non-existing endpoint")
+    void shouldReturn404ForNonExistingEndpoint() throws Exception {
+        mockMvc.perform(get("/api/not-existing"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.title").value("Resource Not Found"))
+                .andExpect(jsonPath("$.detail").value("Requested endpoint was not found."));
+    }
 }
